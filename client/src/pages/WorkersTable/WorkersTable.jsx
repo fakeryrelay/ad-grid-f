@@ -91,7 +91,7 @@ export const WorkersTable = () => {
   };
 
   const createRow = async (body) => {
-    let shopId = id ? id : body.shop_id 
+    let shopId = id === 'all' ? id : body.shop_id 
     const data = {
       ...body,
       shop_id: shopId
