@@ -56,7 +56,7 @@ export const WorkersTable = () => {
 
   useEffect(() => {
     const getCreateParams = async () => {
-      if (id) {
+      if (id !== 'all') {
         setCreateParams(createParamsSingle)
         return
       }
