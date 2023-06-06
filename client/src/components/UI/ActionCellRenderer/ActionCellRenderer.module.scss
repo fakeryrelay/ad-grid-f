@@ -1,0 +1,54 @@
+.wrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+
+  button {
+    height: 30px;
+    padding: 0 5px;
+    
+    font-family: inherit;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    
+    border: none;
+    border-radius: 5px;
+    
+    cursor: pointer;
+    transition: background-color .2s ease-in-out;
+  }
+}
+
+.cancel {
+  background-color: #8b8b8b;
+
+  &:hover {
+    background-color: darken(#8b8b8b, 10%);
+  }
+}
+.delete {
+  background-color: red;
+
+  &:hover {
+    background-color: darken(red, 10%);
+  }
+}
+.edit {
+  background-color: #3366ff;
+
+  &:hover {
+    background-color: darken(#3366ff, 10%);
+  }
+}
+.update {
+  background-color: rgb(98, 192, 98);
+
+  &:hover {
+    background-color: darken(rgb(98, 192, 98), 10%);
+  }
+}

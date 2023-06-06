@@ -1,0 +1,33 @@
+.wrapper {
+  width: 250px;
+  height: calc(100vh - 60px);
+  min-height: 550px;
+
+  padding: 10px;
+
+  background-color: #fff;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(33, 40, 50, 0.15);
+
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;        /* цвет дорожки */
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #c6e7ff;    /* цвет плашки */
+    border-radius: 20px;       /* закругления плашки */
+  }
+}
+
+.header {
+  margin: 10px 0 5px;
+  font-size: 14px;
+  text-transform: uppercase;
+  padding-left: 10px;
+
+  color: #3366ff;
+}
