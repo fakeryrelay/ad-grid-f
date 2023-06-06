@@ -1,70 +1,89 @@
-# Getting Started with Create React App
+# Инструкция по установке и запуску проекта
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 1. Скачиваение проекты
 
-## Available Scripts
+Открыть редактор кода (в моем случае VS Code). Выбрать рабочу папку. Открыть консоль разработчика и выполнить команду
 
-In the project directory, you can run:
+### `git clone https://github.com/fakeryrelay/ad-grid-f.git`
+
+Перейти в рабочую папку при помощь команды 
+
+### `cd ad-grid-f`
+
+## 2. Создание БД ( в моем случае с использованием pgAdmin 4)
+
+Создать базу данных в удобном месте
+
+![image](https://github.com/fakeryrelay/ad-grid-f/assets/79545766/348f4c60-1803-4661-80bd-b76e14e7c63d)
+
+Перейти в Query Tool
+
+![image](https://github.com/fakeryrelay/ad-grid-f/assets/79545766/e2bd14b7-6f08-4835-91a0-3e664442de74)
+
+Импортировать файл 'init-db.sql' из склонированной папки
+
+![image](https://github.com/fakeryrelay/ad-grid-f/assets/79545766/8766146c-a2ff-4638-86e6-e035f1eb28d1)
+
+Запустить скрипт нажатие кнопки либо клавишей F5
+
+![image](https://github.com/fakeryrelay/ad-grid-f/assets/79545766/93b9c201-952d-4065-9862-17844c40de25)
+
+БД создана
+
+## 3. Настройка и запуск сервера
+
+В VS Code перейти в папку server при помощи команды 
+
+### `cd server`
+
+Установить необходимые библиотека
+
+### `npm i`
+
+В файле config.json, который находится в папке servers/config в пунке url ввести адресс совоей доступа к своей БД
+
+![image](https://github.com/fakeryrelay/ad-grid-f/assets/79545766/8d57fa44-fd1f-4640-8a8b-f3b22de47f46)
+
+Связать БД и сервер при помощи команды
+
+### `npx sequelize-cli db:migrate`
+
+Запустить сервер
+
+### `npm run dev`
+
+Сервер и БД запущены
+
+## 4. Настройка и запуск клиентской части приложения
+
+В VS Code перейти в папку client. Если ыв остановились на предыдущем шаге создания БД, то это можно сделать при помощи команды
+
+### `cd ../client`
+
+Установить необходимые библиотека
+
+### `npm i`
+
+Запустить проект в режиме разработчика
 
 ### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Проект успешно собран и запущен.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# Опциональные решения
 
-### `npm test`
+## Сервер
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Использована библиотека express-async-handler для работы с запросами т.к. с ней в случае расширения количества запросов удобнее отлавливать и возращать необходимые состояния HTTP с которыми возможно будет необходимо работать на клиентской части. Можно было отлавливать ошибки с помощью стандартной конструкции JS: try...catch.
+2. Валидация выполнена просто. В случае необходимости можно использовать более сложные конструкции для работы с NUMERIC и прочими данными. Также можно использовать библиотеку 'validate'.
 
-### `npm run build`
+## Клиент
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Так как не знал какой интерфейс будет оптимальным, сделал тот, который посчитал удобнее. При необходимости можно перенести все кнопки для работы с запросами в верхнюю часть страницы(что в каком-то смысле проще). Либо в верхнюю часть можно перенести функционал для более конкретных случаев работы с таблице (удаление выбраных строке, шаблонной добавление данных и т.п.)
+2. Для работы с запросами использована библиотека axios. Посчитал этот вариант более удобным и если смотреть на расширение функционала, то она проще для вывода сообщений для пользователя о состоянии запроса (error messages etc.). Можно было пользоваться стандартным методом fetch.
+3. Для валидации и удобного заполнения данных использовал метод библиотеки cellEditor. Из вариантов реализации cellEditor выброл вариант на классах, так как он меньше изменяет поведение ячейки и мне показалось что более прост в работе. Также можно было создать кастомные компоненты для каждого типа данных, но посчитал это изличним так как есть специальное средство.
+4. При неверном изменении данных, таблица возращает свои старые данные. Посчитал этот способ удобным т.к. визуально отображается красным некоректные введенные данные, хотя можно было оставить возможность дальнейшей редакции таблицыю
+5. Вместо создания SPA выбрал вариант с MPA т.к. при масштабировании приложения будет удобнее работать и переключаться между компонентами. Так же она позволяет добавлять удобные функции как возращение назад и т.п. Что не реализовать качественно без библиотеки для работы с состояниями
+6. Не покрывал некоторые запросы на отправку и изменение дополнительными тестами на валидность т.к. реализовал кастомные input и select которые не позволяют пользователю ввести некоректные данные.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+P.S. Большая часть времени ушла на изучение работы с ag-grid и способов манипулции с данными. Интересный выше проект
