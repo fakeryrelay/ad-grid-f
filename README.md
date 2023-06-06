@@ -24,7 +24,7 @@
 
 ![image](https://github.com/fakeryrelay/ad-grid-f/assets/79545766/8766146c-a2ff-4638-86e6-e035f1eb28d1)
 
-Запустить скрипт нажатие кнопки либо клавишей F5
+Запустить скрипт нажатием кнопки либо клавишей F5
 
 ![image](https://github.com/fakeryrelay/ad-grid-f/assets/79545766/93b9c201-952d-4065-9862-17844c40de25)
 
