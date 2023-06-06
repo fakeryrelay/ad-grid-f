@@ -1,7 +1,7 @@
 import { ImHome, ImTable, ImNewTab, ImStatsBars, ImTable2 } from "react-icons/im";
 import { NavLink } from "../../UI/NavLink/NavLink";
 import styles from "./Sidebar.module.scss";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export const Sidebar = () => {
   const location = useLocation()
