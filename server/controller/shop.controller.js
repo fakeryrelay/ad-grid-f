@@ -13,7 +13,7 @@ const createShop = asyncHandler(async (req, res) => {
     throw new Error("Not valid name");
   }
 
-  if (total_revenue !== String(+total_revenue)) {
+  if (total_revenue !== parseFloat(total_revenue)) {
     res.status(400);
     throw new Error("Not valid total_revenue");
   }
