@@ -8,22 +8,34 @@ const { validateDate } = require("../utils/validate.js");
 const createShop = asyncHandler(async (req, res) => {
   const { name, total_revenue, open_date, area } = req.body;
 
-  if (typeof name !== "string" && name.length > 255) {
+  const newShop = {
+    name: name,
+    total_revenue: +total_revenue,
+    open_date: open_date,
+    area: +area,
+  };
+
+  // +
+  if (newShop.name.length > 255) {
     res.status(400);
     throw new Error("Not valid name");
   }
 
-  if (total_revenue !== parseFloat(total_revenue)) {
+  if (
+    String(parseInt(newShop.total_revenue)).length > 131072 ||
+    (String(newShop.total_revenue).split(".").length === 2 &&
+      String(newShop.total_revenue).split(".")[1].length > 16383)
+  ) {
     res.status(400);
     throw new Error("Not valid total_revenue");
   }
 
-  if (!validateDate(open_date)) {
+  if (!validateDate(newShop.open_date)) {
     res.status(400);
     throw new Error("Not valid open_date");
   }
 
-  if (+area !== parseInt(area)) {
+  if (newShop.area > 2147483647) {
     res.status(400);
     throw new Error("Not valid area");
   }
@@ -82,38 +94,49 @@ const updateShop = asyncHandler(async (req, res) => {
 
   const { name, total_revenue, open_date, area } = req.body;
 
-    if (typeof name !== "string" && name.length > 255) {
-      res.status(400)
-      throw new Error("Not valid name");
-    }
+  const newShop = {
+    name: name,
+    total_revenue: +total_revenue,
+    open_date: open_date,
+    area: +area,
+  };
 
-    if (total_revenue !== String(+total_revenue)) {
-      res.status(400)
-      throw new Error("Not valid total_revenue");
-    }
+  // +
+  if (newShop.name.length > 255) {
+    res.status(400);
+    throw new Error("Not valid name");
+  }
 
-    if (!validateDate(open_date)) {
-      res.status(400)
-      throw new Error("Not valid open_date");
-    }
+  if (
+    String(parseInt(newShop.total_revenue)).length > 131072 ||
+    (String(newShop.total_revenue).split(".").length === 2 &&
+      String(newShop.total_revenue).split(".")[1].length > 16383)
+  ) {
+    res.status(400);
+    throw new Error("Not valid total_revenue");
+  }
 
-    if (+area !== parseInt(area)) {
-      res.status(400)
-      throw new Error("Not valid area");
-    }
+  if (!validateDate(newShop.open_date)) {
+    res.status(400);
+    throw new Error("Not valid open_date");
+  }
 
-    const updatedShop = await Shop.update(req.body, {
-      where: {
-        id: shopId,
-      },
-    });
+  if (newShop.area > 2147483647) {
+    res.status(400);
+    throw new Error("Not valid area");
+  }
 
-    if (!updatedShop) {
-      res.status(404);
-    }
+  const updatedShop = await Shop.update(req.body, {
+    where: {
+      id: shopId,
+    },
+  });
 
-    res.json(updatedShop);
+  if (!updatedShop) {
+    res.status(404);
+  }
 
+  res.json(updatedShop);
 });
 
 // @desc    Delete shop item
@@ -122,30 +145,30 @@ const updateShop = asyncHandler(async (req, res) => {
 const deleteShop = asyncHandler(async (req, res) => {
   const shopId = +req.params.id;
 
-    const findShop = await Shop.findOne({
-      where: {
-        id: shopId,
-      },
-    }); 
-    
-    if (!findShop) {
-      res.status(404)
-      throw new Error('No such shop')
-    }
+  const findShop = await Shop.findOne({
+    where: {
+      id: shopId,
+    },
+  });
 
-    await Worker.destroy({
-      where: {
-        shop_id: shopId,
-      },
-    });
+  if (!findShop) {
+    res.status(404);
+    throw new Error("No such shop");
+  }
 
-    const deleteShop = await Shop.destroy({
-      where: {
-        id: shopId,
-      },
-    });
+  await Worker.destroy({
+    where: {
+      shop_id: shopId,
+    },
+  });
 
-    res.json(deleteShop)
+  const deleteShop = await Shop.destroy({
+    where: {
+      id: shopId,
+    },
+  });
+
+  res.json(deleteShop);
 });
 
 module.exports = { createShop, getAllShops, getShop, updateShop, deleteShop };
