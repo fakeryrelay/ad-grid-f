@@ -8,32 +8,39 @@ const { validateDate } = require("../utils/validate.js");
 const createWorker = asyncHandler(async (req, res) => {
   const { name, salary, hire_date, performance, shop_id } = req.body;
 
-  if (typeof name !== "string" && name.length > 255) {
+  const newShop = {
+    name: name,
+    salary: +salary,
+    hire_date: hire_date,
+    performance: +performance,
+    shop_id: +shop_id,
+  };
+
+  if (newShop.name.length > 255) {
     res.status(400);
     throw new Error("Not valid name");
   }
 
-  if (salary !== String(+salary)) {
+  if (
+    String(parseInt(newShop.salary)).length > 131072 ||
+    (String(newShop.salary).split(".").length === 2 &&
+      String(newShop.salary).split(".")[1].length > 16383)
+  ) {
     res.status(400);
     throw new Error("Not valid salary");
   }
 
-  if (!validateDate(hire_date)) {
+  if (!validateDate(newShop.hire_date)) {
     res.status(400);
     throw new Error("Not valid hire_date");
   }
 
-  if (+performance !== parseInt(performance)) {
+  if (newShop.performance > 2147483647) {
     res.status(400);
     throw new Error("Not valid performance");
   }
 
-  if (shop_id !== String(parseInt(shop_id))) {
-    res.status(400);
-    throw new Error("Not valid shop_id");
-  }
-
-  const worker = await Worker.create(req.body);
+  const worker = await Worker.create(newShop);
 
   res.json(worker);
 });
@@ -65,7 +72,7 @@ const getWorkersItemsByShop = asyncHandler(async (req, res) => {
 
   if (!isShop) {
     res.status(404);
-    throw new Error('No such shop')
+    throw new Error("No such shop");
   }
 
   const shop = await Worker.findAll({
@@ -86,38 +93,45 @@ const getWorkersItemsByShop = asyncHandler(async (req, res) => {
 // @route   PUT /api/shops/:id
 // @access  Private
 const updateWorkerItem = asyncHandler(async (req, res) => {
-  const monthStatId = +req.params.id;
+  const shop_id = +req.params.id;
 
-  const { name, salary, hire_date, performance, shop_id } = req.body;
+  const { name, salary, hire_date, performance } = req.body;
 
-  if (typeof name !== "string" && name.length > 255) {
+  const newShop = {
+    name: name,
+    salary: +salary,
+    hire_date: hire_date,
+    performance: +performance,
+    shop_id: shop_id,
+  };
+
+  if (newShop.name.length > 255) {
     res.status(400);
     throw new Error("Not valid name");
   }
 
-  if (salary !== String(+salary)) {
+  if (
+    String(parseInt(newShop.salary)).length > 131072 ||
+    (String(newShop.salary).split(".").length === 2 &&
+      String(newShop.salary).split(".")[1].length > 16383)
+  ) {
     res.status(400);
     throw new Error("Not valid salary");
   }
 
-  if (!validateDate(hire_date)) {
+  if (!validateDate(newShop.hire_date)) {
     res.status(400);
     throw new Error("Not valid hire_date");
   }
 
-  if (+performance !== parseInt(performance)) {
+  if (newShop.performance > 2147483647) {
     res.status(400);
     throw new Error("Not valid performance");
   }
 
-  if (shop_id !== String(parseInt(shop_id))) {
-    res.status(400);
-    throw new Error("Not valid shop_id");
-  }
-
-  const updatedWorkerItem = await Worker.update(req.body, {
+  const updatedWorkerItem = await Worker.update(newShop, {
     where: {
-      id: monthStatId,
+      id: shop_id,
     },
   });
 
@@ -134,17 +148,17 @@ const updateWorkerItem = asyncHandler(async (req, res) => {
 const deleteWorkerItem = asyncHandler(async (req, res) => {
   const monthStatId = +req.params.id;
 
-    const deleteWorkerItem = await Worker.destroy({
-      where: {
-        id: monthStatId,
-      },
-    });
+  const deleteWorkerItem = await Worker.destroy({
+    where: {
+      id: monthStatId,
+    },
+  });
 
-    if (!deleteWorkerItem) {
-      res.status(404);
-    }
+  if (!deleteWorkerItem) {
+    res.status(404);
+  }
 
-    res.json(deleteWorkerItem);
+  res.json(deleteWorkerItem);
 });
 
 module.exports = {
